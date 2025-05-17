@@ -63,117 +63,120 @@ How It Works
 This ETL pipeline follows a standard pattern with three major components:
 Extract
 
-Reads data from NBA player stats CSV file
-Handles missing values and encoding issues
-Validates input data format
+- Reads data from NBA player stats CSV file
+- Handles missing values and encoding issues
+- Validates input data format
 
 Transform
 
-Cleans column names and data values
-Separates player data from statistics
-Restructures data for relational database storage
-Adds timestamps and additional metadata
+- Cleans column names and data values
+- Separates player data from statistics
+- Restructures data for relational database storage
+- Adds timestamps and additional metadata
 
 Load
 
-Creates database tables if they don't exist
-Inserts processed data into SQLite database
-Maintains proper table relationships
+- Creates database tables if they don't exist
+- Inserts processed data into SQLite database
+- Maintains proper table relationships
 
 Database Schema
 The pipeline creates three tables in the SQLite database:
 players Table
 
-id: Unique player identifier
-player_name: Full player name
-age: Player's age
-team: Team abbreviation (e.g., LAL, BOS)
-position: Player position (PG, SG, SF, PF, C)
-player_additional: Additional player identifier
-last_updated: Timestamp of last data update
+- id: Unique player identifier
+- player_name: Full player name
+- age: Player's age
+- team: Team abbreviation (e.g., LAL, BOS)
+- position: Player position (PG, SG, SF, PF, C)
+- player_additional: Additional player identifier
+- last_updated: Timestamp of last data update
 
 player_stats Table
 
-id: Unique stats record identifier
-player_id: Foreign key to players table
-season: NBA season (e.g., "2024-25")
-games_played: Number of games played
-games_started: Number of games started
-minutes_per_game: Average minutes per game
-Various statistics: Points, rebounds, assists, etc.
-last_updated: Timestamp of last data update
+- id: Unique stats record identifier
+- player_id: Foreign key to players table
+- season: NBA season (e.g., "2024-25")
+- games_played: Number of games played
+- games_started: Number of games started
+- minutes_per_game: Average minutes per game
+- Various statistics: Points, rebounds, assists, etc.
+- last_updated: Timestamp of last data update
 
 etl_runs Table
 
-id: Unique run identifier
-start_time: When the ETL job started
-end_time: When the ETL job completed
-status: Success or failure status
-records_processed: Number of records processed
-error_message: Error information if failed
+- id: Unique run identifier
+- start_time: When the ETL job started
+- end_time: When the ETL job completed
+- status: Success or failure status
+- records_processed: Number of records processed
+- error_message: Error information if failed
 
 ETL Process
+
 Extraction Phase
 The extraction phase involves reading data from the CSV file. The code handles this through:
 
-First checking if the specified CSV file exists
-If not, reading from the uploaded paste.txt file
-Converting the content to a pandas DataFrame
+- First checking if the specified CSV file exists
+- If not, reading from the uploaded paste.txt file
+- Converting the content to a pandas DataFrame
 
 Key methods:
 
-extract(): Main extraction method
-_load_uploaded_csv_content(): Helper for loading uploaded file
+- extract(): Main extraction method
+- _load_uploaded_csv_content(): Helper for loading uploaded file
 
 Transformation Phase
 The transformation phase is where data cleaning and restructuring happens:
 
-Clean column names (removing whitespace)
-Handle missing values (replace '-' with NaN)
-Separate player information from statistics
-Create database IDs and foreign key relationships
-Add timestamp metadata
+- Clean column names (removing whitespace)
+- Handle missing values (replace '-' with NaN)
+- Separate player information from statistics
+- Create database IDs and foreign key relationships
+- Add timestamp metadata
 
 Key method:
 
-transform(): Performs all transformation steps
+- transform(): Performs all transformation steps
 
 Loading Phase
 The loading phase inserts the transformed data into the SQLite database:
 
-Connect to the SQLite database
-Replace existing data with new data
-Ensure proper relationships between tables
-Commit the transaction and close connection
+- Connect to the SQLite database
+- Replace existing data with new data
+- Ensure proper relationships between tables
+- Commit the transaction and close connection
 
 Key methods:
 
-load_players(): Loads player information
-load_stats(): Loads player statistics
+- load_players(): Loads player information
+- load_stats(): Loads player statistics
 
 Error Handling and Logging
 The pipeline implements comprehensive error handling and logging:
 
-Uses Python's logging module for consistent logs
-Captures detailed exception information
-Logs to both file and console
-Records ETL run information in the database
+- Uses Python's logging module for consistent logs
+- Captures detailed exception information
+- Logs to both file and console
+- Records ETL run information in the database
 
 Each stage of the pipeline is wrapped in try-except blocks to ensure errors are properly captured and don't cause the entire pipeline to fail without explanation.
+
 Scheduling
 The pipeline includes scheduling capabilities using the schedule library:
 
-By default, scheduled to run daily at 2 AM
-Can be modified for different frequencies
-Records each run in the database
+- By default, scheduled to run daily at 2 AM
+- Can be modified for different frequencies
+- Records each run in the database
 
 The scheduler is implemented in the main section of the script, and in a production environment, the script would continue running to execute scheduled jobs.
+
 Extending the Pipeline
 Here are some ways to extend this pipeline:
 
-Multiple Data Sources: Add support for additional data sources like APIs
-Incremental Loading: Implement change tracking to only update changed records
-Data Validation: Add more robust validation rules
-Visualization: Create dashboards with matplotlib, seaborn, or plotly
-More Advanced Scheduling: Use Airflow or other orchestration tools
-Cloud Integration: Modify to work with cloud databases like PostgreSQL or BigQuery
+1. Multiple Data Sources: Add support for additional data sources like APIs
+2. Incremental Loading: Implement change tracking to only update changed records
+3. Data Validation: Add more robust validation rules
+4. Visualization: Create dashboards with matplotlib, seaborn, or plotly
+5. More Advanced Scheduling: Use Airflow, etc.
+6. Cloud Integration: Modify to work with cloud databases like PostgreSQL or BigQuery
