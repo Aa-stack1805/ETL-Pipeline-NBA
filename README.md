@@ -2,10 +2,6 @@
 
 A complete Extract-Transform-Load (ETL) pipeline for NBA player statistics that processes data from CSV files into a structured SQLite database. This project demonstrates how to build a production-ready data pipeline in Python.
 
-![NBA Stats ETL](https://img.shields.io/badge/NBA-Stats%20ETL-blue)
-![Python](https://img.shields.io/badge/Python-3.6%2B-brightgreen)
-![License](https://img.shields.io/badge/License-MIT-yellow)
-
 ## Features
 
 - **Extract**: Read NBA player statistics from CSV files
@@ -201,8 +197,4 @@ Here are some ways to extend this pipeline:
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-
-Created by [Your Name] - Feel free to contribute!
+This project is licensed under the MIT License.
